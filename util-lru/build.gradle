@@ -1,0 +1,66 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.8.10'
+    id 'maven-publish'
+    id 'signing'
+}
+
+repositories {
+    maven { url 'https://mirrors.huaweicloud.com/repository/maven/' }
+}
+
+dependencies {
+    implementation 'androidx.collection:collection:1.1.0'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+    withJavadocJar()
+    withSourcesJar()
+}
+
+publishing {
+    repositories {
+        maven {
+            url = 'https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/'
+            credentials {
+                username = project['ossrh.username']
+                password = project['ossrh.password']
+            }
+        }
+    }
+    publications {
+        mavenJava(MavenPublication) {
+            groupId = 'io.github.chavin-chen'
+            artifactId = 'util-lru'
+            version = '1.0.0'
+            from components.java
+            pom {
+                name = 'Files LRU'
+                description = 'With this lib you can use the LRU strategy on folders'
+                url = 'https://github.com/Chavin-Chen/Utils'
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        name = 'Chavin Chen'
+                        email = 'chavinchen@hotmail.com'
+                    }
+                }
+                scm {
+                    url = 'https://github.com/Chavin-Chen/Utils/tree/master'
+                    connection = 'scm:git:git://github.com/Chavin-Chen/Utils.git'
+                    developerConnection = 'scm:git:ssh://github.com:Chavin-Chen/Utils.git'
+                }
+            }
+        }
+    }
+}
+
+signing {
+    sign publishing.publications.mavenJava
+}

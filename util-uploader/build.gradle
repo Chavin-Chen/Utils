@@ -1,0 +1,70 @@
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+    id 'signing'
+}
+
+repositories {
+    maven { url 'https://mirrors.huaweicloud.com/repository/maven/' }
+}
+
+dependencies {
+    implementation 'org.jetbrains:annotations:23.1.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:adapter-rxjava3:2.9.0'
+    implementation "io.reactivex.rxjava3:rxjava:3.1.5"
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+    withJavadocJar()
+    withSourcesJar()
+}
+
+
+publishing {
+    repositories {
+        maven {
+            url = 'https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/'
+            credentials {
+                username = project['ossrh.username']
+                password = project['ossrh.password']
+            }
+        }
+    }
+    publications {
+        mavenJava(MavenPublication) {
+            groupId = 'io.github.chavin-chen'
+            artifactId = 'util-uploader'
+            version = '1.0.0'
+            from components.java
+            pom {
+                name = 'Block Uploader'
+                description = 'With this lib you can upload files in segments.(if your server supported)'
+                url = 'https://github.com/Chavin-Chen/Utils'
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        name = 'Chavin Chen'
+                        email = 'chavinchen@hotmail.com'
+                    }
+                }
+                scm {
+                    url = 'https://github.com/Chavin-Chen/Utils/tree/master'
+                    connection = 'scm:git:git://github.com/Chavin-Chen/Utils.git'
+                    developerConnection = 'scm:git:ssh://github.com:Chavin-Chen/Utils.git'
+                }
+            }
+        }
+    }
+}
+
+signing {
+    sign publishing.publications.mavenJava
+}
